@@ -5,12 +5,16 @@ import PackageDescription
 
 let package = Package(
     name: "ComponentesSUI",
+    platforms: [.iOS(.v17)],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "ComponentesSUI",
             targets: ["ComponentesSUI"]
-        ),
+        )
+    ],
+    dependencies: [
+        // Add external dependencies here if needed
+        // .package(url: "https://github.com/...", from: "1.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
