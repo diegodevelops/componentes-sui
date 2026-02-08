@@ -9,7 +9,7 @@ import SwiftUI
 
 /// View that observes its position within a given coordinate space,
 /// and assigns that position to the specified Binding.
-struct PositionObservingView<Content: View>: View {
+private struct PositionObservingView<Content: View>: View {
     var coordinateSpace: CoordinateSpace
     @Binding var position: CGPoint
     @ViewBuilder var content: () -> Content
