@@ -45,7 +45,7 @@ private extension PositionObservingView {
 
 /// Specialized scroll view that observes its content offset (scroll position)
 /// and assigns it to the specified Binding.
-struct OffsetObservingScrollView<Content: View>: View {
+public struct OffsetObservingScrollView<Content: View>: View {
     var axis: Axis.Set = .vertical
     var showsIndicators = true
     var enablePaging: Bool

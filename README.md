@@ -51,6 +51,72 @@ OffsetObservingScrollView(
 }
 ```
 
+---
+
+### WeeklyCalendarView
+
+A horizontally pageable weekly calendar that displays one week at a time with infinite scrolling. It highlights the selected date, marks event dates, and automatically loads more weeks as the user scrolls near the edges.
+
+**Parameters:**
+- `width`: The width of the calendar view (typically from `GeometryReader`)
+- `events`: Optional array of `Date` values to mark on the calendar
+- `selectedDate`: Binding to the currently selected date
+- `isLoading`: Shows a loading state when `true`
+- `isPreviewing`: Set to `true` when used inside SwiftUI previews
+- `fontName`: The custom font name to use
+- `textColor`: The text color for the calendar
+
+**Usage:**
+
+```swift
+@State private var selectedDate = Date()
+
+GeometryReader { geometry in
+    WeeklyCalendarView(
+        width: geometry.size.width,
+        events: [Date()],
+        selectedDate: $selectedDate,
+        isLoading: false,
+        fontName: "Helvetica",
+        textColor: .primary
+    )
+}
+```
+
+---
+
+### MonthlyCalendarView
+
+A horizontally pageable monthly calendar that displays a full month grid with infinite scrolling. It shows the month and year header, weekday symbols, week rows, event markers, and a "back to this month" button when navigating away from the current month.
+
+**Parameters:**
+- `width`: The width of the calendar view (typically from `GeometryReader`)
+- `events`: Optional array of `Date` values to mark on the calendar
+- `selectedDate`: Binding to the currently selected date
+- `isLoading`: Dims the calendar content when `true`
+- `selectAction`: Optional closure called when a date is selected
+- `isPreviewing`: Set to `true` when used inside SwiftUI previews
+- `fontName`: The custom font name to use (defaults to `"Helvetica"`)
+- `textColor`: The text color for the calendar
+
+**Usage:**
+
+```swift
+@State private var selectedDate = Date()
+
+MonthlyCalendarView(
+    width: 400,
+    events: [Date()],
+    selectedDate: $selectedDate,
+    isLoading: false,
+    selectAction: { date in
+        print("Selected: \(date)")
+    },
+    fontName: "Helvetica",
+    textColor: .primary
+)
+```
+
 ## Requirements
 
 - iOS 17.0+
