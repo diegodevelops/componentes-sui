@@ -54,6 +54,20 @@ public struct OffsetObservingScrollView<Content: View>: View {
 
     private let coordinateSpaceName = UUID()
     
+    public init(
+        axis: Axis.Set,
+        showsIndicators: Bool = true,
+        enablePaging: Bool,
+        offset: Binding<CGPoint>,
+        content: @escaping () -> Content
+    ) {
+        self.axis = axis
+        self.showsIndicators = showsIndicators
+        self.enablePaging = enablePaging
+        _offset = offset
+        self.content = content
+    }
+    
     public var body: some View {
         
         ScrollView(
