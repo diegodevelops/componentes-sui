@@ -46,7 +46,7 @@ public struct WeeklyCalendarView: View {
     // ADDED: When scrolling within this many weeks of the edge, reload the batch
     private let edgeThreshold = 4
 
-    init(
+    public init(
         width: CGFloat,
         events: [Date]?,
         selectedDate: Binding<Date>,

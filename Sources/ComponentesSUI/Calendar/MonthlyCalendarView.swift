@@ -35,7 +35,7 @@ public struct MonthlyCalendarView: View {
         
     private let helper = DatePageHelper()
     
-    init(
+    public init(
         width: CGFloat,
         events: [Date]?,
         selectedDate: Binding<Date>,
