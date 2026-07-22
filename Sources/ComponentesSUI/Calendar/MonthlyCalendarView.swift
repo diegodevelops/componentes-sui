@@ -15,7 +15,8 @@ public struct MonthlyCalendarView: View {
     @Binding var selectedDate: Date
     var isLoading: Bool
     var selectAction: ((_ date: Date) -> Void)?
-    
+    var eventIndicatorIcon: Image?
+
     // this flag was created because
     // for some reason the preview
     // canvas won't work unless
@@ -23,18 +24,18 @@ public struct MonthlyCalendarView: View {
     // on .onAppear inside a
     // the main thread
     var isPreviewing: Bool
-    
+
     let fontName: String
     let textColor: Color
-    
+
     @State private var scrollOffset = CGPoint()
     @State private var didScrollManually = true
     @State private(set) var datePages: [DatePage]
-    
+
     @State var opacity: Double = 1
-        
+
     private let helper = DatePageHelper()
-    
+
     public init(
         width: CGFloat,
         events: [Date]?,
@@ -43,7 +44,8 @@ public struct MonthlyCalendarView: View {
         selectAction: ((_ date: Date) -> Void)? = nil,
         isPreviewing: Bool = false,
         fontName: String = "Helvetica",
-        textColor: Color
+        textColor: Color,
+        eventIndicatorIcon: Image? = nil
     ) {
         self.width = width
         self.events = events
@@ -53,6 +55,7 @@ public struct MonthlyCalendarView: View {
         self.isPreviewing = isPreviewing
         self.fontName = fontName
         self.textColor = textColor
+        self.eventIndicatorIcon = eventIndicatorIcon
         _datePages = State(
             initialValue: helper.newMonthlyDatePagesFrom(
                 selectedDate.wrappedValue
@@ -99,7 +102,8 @@ public struct MonthlyCalendarView: View {
                                 selectedDate: $selectedDate,
                                 fontName: fontName,
                                 textColor: textColor,
-                                selectAction: selectAction
+                                selectAction: selectAction,
+                                eventIndicatorIcon: eventIndicatorIcon
                             )
                             .opacity(isLoading ? opacity : 1)
                             .padding(.top, 20)
@@ -233,9 +237,10 @@ private struct MonthlyCalendarContentView: View {
     let fontName: String
     let textColor: Color
     var selectAction: ((_ date: Date) -> Void)?
-    
+    var eventIndicatorIcon: Image?
+
     private(set) var weekRows: [MonthlyWeekRow]
-    
+
     init(
         width: CGFloat,
         date: Date,
@@ -243,7 +248,8 @@ private struct MonthlyCalendarContentView: View {
         selectedDate: Binding<Date>,
         fontName: String,
         textColor: Color,
-        selectAction: ((_ date: Date) -> Void)?
+        selectAction: ((_ date: Date) -> Void)?,
+        eventIndicatorIcon: Image? = nil
     ) {
         self.width = width
         self.date = date
@@ -252,7 +258,8 @@ private struct MonthlyCalendarContentView: View {
         self.fontName = fontName
         self.textColor = textColor
         self.selectAction = selectAction
-        
+        self.eventIndicatorIcon = eventIndicatorIcon
+
         let weekDates = date.currentMonthOneDayOfEachWeek()
         
         self.weekRows = []
@@ -279,7 +286,8 @@ private struct MonthlyCalendarContentView: View {
                     selectedDate: $selectedDate,
                     fontName: fontName,
                     textColor: textColor,
-                    selectAction: selectAction
+                    selectAction: selectAction,
+                    eventIndicatorIcon: eventIndicatorIcon
                 )
             }
             

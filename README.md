@@ -65,6 +65,7 @@ A horizontally pageable weekly calendar that displays one week at a time with in
 - `isPreviewing`: Set to `true` when used inside SwiftUI previews
 - `fontName`: The custom font name to use
 - `textColor`: The text color for the calendar
+- `eventIndicatorIcon`: Optional custom `Image` shown in place of the default dot to mark event dates
 
 **Usage:**
 
@@ -78,7 +79,8 @@ GeometryReader { geometry in
         selectedDate: $selectedDate,
         isLoading: false,
         fontName: "Helvetica",
-        textColor: .primary
+        textColor: .primary,
+        eventIndicatorIcon: Image(systemName: "star.fill")
     )
 }
 ```
@@ -98,6 +100,7 @@ A horizontally pageable monthly calendar that displays a full month grid with in
 - `isPreviewing`: Set to `true` when used inside SwiftUI previews
 - `fontName`: The custom font name to use (defaults to `"Helvetica"`)
 - `textColor`: The text color for the calendar
+- `eventIndicatorIcon`: Optional custom `Image` shown in place of the default dot to mark event dates
 
 **Usage:**
 
@@ -113,7 +116,8 @@ MonthlyCalendarView(
         print("Selected: \(date)")
     },
     fontName: "Helvetica",
-    textColor: .primary
+    textColor: .primary,
+    eventIndicatorIcon: Image(systemName: "star.fill")
 )
 ```
 
