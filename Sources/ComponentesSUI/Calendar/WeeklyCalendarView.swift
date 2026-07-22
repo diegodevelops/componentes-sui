@@ -25,6 +25,7 @@ public struct WeeklyCalendarView: View {
 
     let fontName: String
     let textColor: Color
+    var eventIndicatorIcon: Image?
 
     @State private var scrollOffset = CGPoint()
     @State private var didScrollManually = true
@@ -53,7 +54,8 @@ public struct WeeklyCalendarView: View {
         isLoading: Bool,
         isPreviewing: Bool = false,
         fontName: String,
-        textColor: Color
+        textColor: Color,
+        eventIndicatorIcon: Image? = nil
     ) {
         self.width = width
         self.events = events
@@ -63,6 +65,7 @@ public struct WeeklyCalendarView: View {
         self.isPreviewing = isPreviewing
         self.fontName = fontName
         self.textColor = textColor
+        self.eventIndicatorIcon = eventIndicatorIcon
         _didTap = State(initialValue: false)
 
         // MODIFIED: Initialize with a full year batch instead of 3 pages
@@ -82,7 +85,8 @@ public struct WeeklyCalendarView: View {
                 events: events,
                 selectedDate: $selectedDate,
                 fontName: fontName,
-                textColor: textColor
+                textColor: textColor,
+                eventIndicatorIcon: eventIndicatorIcon
             )
         }
         else {
@@ -112,7 +116,8 @@ public struct WeeklyCalendarView: View {
                                         selectedDate: $selectedDate,
                                         didTap: $didTap,
                                         fontName: fontName,
-                                        textColor: textColor
+                                        textColor: textColor,
+                                        eventIndicatorIcon: eventIndicatorIcon
                                     )
                                 }
                                 .frame(width: width)
@@ -228,6 +233,7 @@ private struct WeeklyCalendarHeaderView: View {
 
     let fontName: String
     let textColor: Color
+    var eventIndicatorIcon: Image?
 
     var body: some View {
         VStack(spacing: 2) {
@@ -245,7 +251,8 @@ private struct WeeklyCalendarHeaderView: View {
                 calendarType: .week,
                 selectedDate: $selectedDate,
                 fontName: fontName,
-                textColor: textColor
+                textColor: textColor,
+                eventIndicatorIcon: eventIndicatorIcon
             )
             .padding(.bottom, 6)
             WeekTextView(
@@ -268,6 +275,7 @@ private struct WeeklyCalendarLoadingView: View {
 
     let fontName: String
     let textColor: Color
+    var eventIndicatorIcon: Image?
 
     @State private(set) var didTap: Bool
 
@@ -276,12 +284,14 @@ private struct WeeklyCalendarLoadingView: View {
         events: [Date]?,
         selectedDate: Binding<Date>,
         fontName: String,
-        textColor: Color
+        textColor: Color,
+        eventIndicatorIcon: Image? = nil
     ) {
         self.width = width
         self.events = events
         self.fontName = fontName
         self.textColor = textColor
+        self.eventIndicatorIcon = eventIndicatorIcon
         _selectedDate = selectedDate
         _didTap = State(initialValue: false)
     }
@@ -298,7 +308,8 @@ private struct WeeklyCalendarLoadingView: View {
                 selectedDate: $selectedDate,
                 didTap: $didTap,
                 fontName: fontName,
-                textColor: textColor
+                textColor: textColor,
+                eventIndicatorIcon: eventIndicatorIcon
             )
 
             Divider()

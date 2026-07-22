@@ -17,15 +17,16 @@ struct DayView: View {
     let font: Font
     let textColor: Color
     var selectAction: ((_ date: Date) -> Void)?
-    
+    var eventIndicatorIcon: Image?
+
     @State var hasEvents: Bool
     @State var isInCurrentDateMonth: Bool
-    
+
     private(set) var day: Int
     private let today = Date()
-    
+
     private var hasSelectAction: Bool
-        
+
     init(
         date: Date,
         monthDate: Date,
@@ -34,7 +35,8 @@ struct DayView: View {
         selectedDate: Binding<Date>,
         fontName: String = "Helvetica",
         textColor: Color,
-        selectAction: ((_ date: Date) -> Void)?
+        selectAction: ((_ date: Date) -> Void)?,
+        eventIndicatorIcon: Image? = nil
     ) {
         self.date = date
         self.monthDate = monthDate
@@ -44,16 +46,17 @@ struct DayView: View {
         self.font = Font.custom(fontName, size: 14)
         self.textColor = textColor
         self.selectAction = selectAction
-        
+        self.eventIndicatorIcon = eventIndicatorIcon
+
         _hasEvents = State(
             initialValue: false
         )
-        
+
         _isInCurrentDateMonth = State(
             initialValue: monthDate
                 .sameMonthAs(date: date)
         )
-        
+
         self.day = Calendar.current.component(.day, from: date)
         self.hasSelectAction = selectAction != nil
     }
@@ -100,14 +103,10 @@ struct DayView: View {
                     )
                 }
                 .overlay() {
-                    Circle()
-                        .foregroundColor(
-                            hasEvents
-                            ? Color.accentColor
-                            : Color.clear
-                        )
-                        .padding(.top, 24)
-                        .frame(width: 4)
+                    if hasEvents {
+                        eventIndicator
+                            .padding(.top, 24)
+                    }
                 }
                 .cornerRadius(geometry.size.width/2)
                 Spacer()
@@ -120,13 +119,27 @@ struct DayView: View {
                 : (isInCurrentDateMonth ? 1 : 0)
             )
             .task {
-                
+
                 if let events = events {
                     if events.hasDateInSameDayAs(date) {
                         hasEvents = true
                     }
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private var eventIndicator: some View {
+        if let eventIndicatorIcon {
+            eventIndicatorIcon
+                .resizable()
+                .scaledToFit()
+                .frame(width: 8, height: 8)
+        } else {
+            Circle()
+                .foregroundColor(Color.accentColor)
+                .frame(width: 4)
         }
     }
 }

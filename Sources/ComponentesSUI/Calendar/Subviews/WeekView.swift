@@ -21,10 +21,11 @@ struct WeekView: View {
     let fontName: String
     let textColor: Color
     var selectAction: ((_ date: Date) -> Void)?
-        
+    var eventIndicatorIcon: Image?
+
     private(set) var week: Int // of month
     private var weekDates = [WeekDate]() // where count = 7
-    
+
     init(
         date: Date,
         monthDate: Date,
@@ -33,9 +34,10 @@ struct WeekView: View {
         selectedDate: Binding<Date>,
         fontName: String,
         textColor: Color,
-        selectAction: ((_ date: Date) -> Void)? = nil
+        selectAction: ((_ date: Date) -> Void)? = nil,
+        eventIndicatorIcon: Image? = nil
     ) {
-        
+
         self.date = date
         self.monthDate = monthDate
         self.events = events
@@ -44,7 +46,8 @@ struct WeekView: View {
         self.fontName = fontName
         self.textColor = textColor
         self.selectAction = selectAction
-                
+        self.eventIndicatorIcon = eventIndicatorIcon
+
         let cal = Calendar.current
         self.week = cal.component(.weekOfMonth, from: date)
         
@@ -70,7 +73,8 @@ struct WeekView: View {
                             selectedDate: $selectedDate,
                             fontName: fontName,
                             textColor: textColor,
-                            selectAction: selectAction
+                            selectAction: selectAction,
+                            eventIndicatorIcon: eventIndicatorIcon
                         )
                     }
                     Spacer()
