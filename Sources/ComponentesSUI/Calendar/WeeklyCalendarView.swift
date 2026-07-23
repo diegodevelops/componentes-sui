@@ -27,6 +27,7 @@ public struct WeeklyCalendarView: View {
     let textColor: Color
     var eventIndicatorIcon: Image?
     var eventIndicatorSize: EventIndicatorSize
+    var isDateHidden: Bool
 
     @State private var scrollOffset = CGPoint()
     @State private var didScrollManually = true
@@ -57,7 +58,8 @@ public struct WeeklyCalendarView: View {
         fontName: String,
         textColor: Color,
         eventIndicatorIcon: Image? = nil,
-        eventIndicatorSize: EventIndicatorSize = .small
+        eventIndicatorSize: EventIndicatorSize = .small,
+        isDateHidden: Bool = false
     ) {
         self.width = width
         self.events = events
@@ -69,6 +71,7 @@ public struct WeeklyCalendarView: View {
         self.textColor = textColor
         self.eventIndicatorIcon = eventIndicatorIcon
         self.eventIndicatorSize = eventIndicatorSize
+        self.isDateHidden = isDateHidden
         _didTap = State(initialValue: false)
 
         // MODIFIED: Initialize with a full year batch instead of 3 pages
@@ -90,7 +93,8 @@ public struct WeeklyCalendarView: View {
                 fontName: fontName,
                 textColor: textColor,
                 eventIndicatorIcon: eventIndicatorIcon,
-                eventIndicatorSize: eventIndicatorSize
+                eventIndicatorSize: eventIndicatorSize,
+                isDateHidden: isDateHidden
             )
         }
         else {
@@ -122,7 +126,8 @@ public struct WeeklyCalendarView: View {
                                         fontName: fontName,
                                         textColor: textColor,
                                         eventIndicatorIcon: eventIndicatorIcon,
-                                        eventIndicatorSize: eventIndicatorSize
+                                        eventIndicatorSize: eventIndicatorSize,
+                                        isDateHidden: isDateHidden
                                     )
                                 }
                                 .frame(width: width)
@@ -240,6 +245,7 @@ private struct WeeklyCalendarHeaderView: View {
     let textColor: Color
     var eventIndicatorIcon: Image?
     var eventIndicatorSize: EventIndicatorSize
+    var isDateHidden: Bool
 
     // Landscape on iPhone reports a compact vertical size class; shrink
     // the header paddings then so the week row has more room to breathe.
@@ -267,12 +273,14 @@ private struct WeeklyCalendarHeaderView: View {
                 eventIndicatorSize: eventIndicatorSize
             )
             .padding(.bottom, isCompactHeight ? 2 : 6)
-            WeekTextView(
-                selectedDate: $selectedDate,
-                fontName: fontName,
-                textColor: textColor
-            )
-            .padding(.bottom, isCompactHeight ? 4 : 16)
+            if !isDateHidden {
+                WeekTextView(
+                    selectedDate: $selectedDate,
+                    fontName: fontName,
+                    textColor: textColor
+                )
+                .padding(.bottom, isCompactHeight ? 4 : 16)
+            }
         }
         .frame(width: width)
     }
@@ -289,6 +297,7 @@ private struct WeeklyCalendarLoadingView: View {
     let textColor: Color
     var eventIndicatorIcon: Image?
     var eventIndicatorSize: EventIndicatorSize
+    var isDateHidden: Bool
 
     @State private(set) var didTap: Bool
 
@@ -299,7 +308,8 @@ private struct WeeklyCalendarLoadingView: View {
         fontName: String,
         textColor: Color,
         eventIndicatorIcon: Image? = nil,
-        eventIndicatorSize: EventIndicatorSize = .small
+        eventIndicatorSize: EventIndicatorSize = .small,
+        isDateHidden: Bool = false
     ) {
         self.width = width
         self.events = events
@@ -307,6 +317,7 @@ private struct WeeklyCalendarLoadingView: View {
         self.textColor = textColor
         self.eventIndicatorIcon = eventIndicatorIcon
         self.eventIndicatorSize = eventIndicatorSize
+        self.isDateHidden = isDateHidden
         _selectedDate = selectedDate
         _didTap = State(initialValue: false)
     }
@@ -325,7 +336,8 @@ private struct WeeklyCalendarLoadingView: View {
                 fontName: fontName,
                 textColor: textColor,
                 eventIndicatorIcon: eventIndicatorIcon,
-                eventIndicatorSize: eventIndicatorSize
+                eventIndicatorSize: eventIndicatorSize,
+                isDateHidden: isDateHidden
             )
 
             Divider()
