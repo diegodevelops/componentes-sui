@@ -31,7 +31,7 @@ struct WeekView: View {
     // height for the enlarged, below-circle indicator in .big mode.
     private let baseRowHeight: CGFloat = 50
     private let bigIndicatorSpacing: CGFloat = 4
-    private let indicatorScaleMultiplier: CGFloat = 3
+    private let indicatorScaleMultiplier: CGFloat = 1.5
 
     private var rowHeight: CGFloat {
         guard eventIndicatorSize == .big else { return baseRowHeight }
