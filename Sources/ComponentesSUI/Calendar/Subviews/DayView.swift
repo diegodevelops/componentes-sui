@@ -135,7 +135,15 @@ struct DayView: View {
                         }
                     }
                     .cornerRadius(diameter/2)
-                    Spacer()
+
+                    // In .small mode the circle stays centered in its block
+                    // (trailing Spacer). In .big mode it's pinned to the
+                    // block's bottom edge instead, so bigIndicatorSpacing is
+                    // the exact gap to the indicator below — otherwise the
+                    // centering slack above would add to it unpredictably.
+                    if eventIndicatorSize == .small {
+                        Spacer()
+                    }
                 }
                 .frame(height: baseRowHeight)
 
