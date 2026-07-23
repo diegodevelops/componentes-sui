@@ -43,7 +43,7 @@ struct DayView: View {
     // placed below it instead; this is the gap between the two. WeekView
     // reserves matching extra row height so it doesn't overlap the next week.
     private let bigIndicatorSpacing: CGFloat = 4
-    private let indicatorScaleMultiplier: CGFloat = 1.5
+    private let indicatorScaleMultiplier: CGFloat = 2
 
     init(
         date: Date,
