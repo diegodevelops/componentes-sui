@@ -33,11 +33,17 @@ struct DayView: View {
     // otherwise overflow the fixed row height and overlap adjacent weeks.
     private let maxDiameter: CGFloat = 44
 
+    // The height reserved for the day circle itself, regardless of
+    // eventIndicatorSize. Keeping this fixed (matches WeekView's row
+    // height in .small mode) means the circle/day number always lands
+    // in the same spot, whether or not a .big indicator is added below it.
+    private let baseRowHeight: CGFloat = 50
+
     // In .big mode the indicator no longer fits inside the circle, so it's
     // placed below it instead; this is the gap between the two. WeekView
     // reserves matching extra row height so it doesn't overlap the next week.
     private let bigIndicatorSpacing: CGFloat = 4
-    private let indicatorScaleMultiplier: CGFloat = 3
+    private let indicatorScaleMultiplier: CGFloat = 1.5
 
     init(
         date: Date,
@@ -84,55 +90,61 @@ struct DayView: View {
 
             VStack(spacing: 0) {
 
-                Spacer()
-                Button(action: {
+                // Fixed-height block: the day circle is always centered
+                // within the same baseRowHeight, so its position never
+                // shifts based on whether a .big indicator is appended
+                // below it for this particular day.
+                VStack(spacing: 0) {
+                    Spacer()
+                    Button(action: {
 
-                    selectedDate = date
-                    selectAction?(date)
-                }, label: {
+                        selectedDate = date
+                        selectAction?(date)
+                    }, label: {
 
-                    Text("\(day)")
-                        .font(font)
-                        .foregroundColor(
-                            date.sameDayAs(date: selectedDate)
-                            ? (hasSelectAction ? textColor : Color.accentColor.contrastingTextColor)
-                            : textColor
-                        )
+                        Text("\(day)")
+                            .font(font)
+                            .foregroundColor(
+                                date.sameDayAs(date: selectedDate)
+                                ? (hasSelectAction ? textColor : Color.accentColor.contrastingTextColor)
+                                : textColor
+                            )
 
-                })
-                .frame(
-                    width: diameter,
-                    height: diameter
-                )
-                .background() {
-                    date.sameDayAs(date: selectedDate)
-                    ? Color.accentColor.opacity(
-                        hasSelectAction
-                        ? (date.sameDayAs(date: today) ? 0.3 : 0)
-                        : 1
-                      )
-                    : Color.accentColor.opacity(
-                        date.sameDayAs(date: today)
-                        ? 0.3
-                        : 0
+                    })
+                    .frame(
+                        width: diameter,
+                        height: diameter
                     )
-                }
-                .overlay() {
-                    if hasEvents && eventIndicatorSize == .small {
-                        eventIndicator
-                            .padding(.top, 24)
+                    .background() {
+                        date.sameDayAs(date: selectedDate)
+                        ? Color.accentColor.opacity(
+                            hasSelectAction
+                            ? (date.sameDayAs(date: today) ? 0.3 : 0)
+                            : 1
+                          )
+                        : Color.accentColor.opacity(
+                            date.sameDayAs(date: today)
+                            ? 0.3
+                            : 0
+                        )
                     }
+                    .overlay() {
+                        if hasEvents && eventIndicatorSize == .small {
+                            eventIndicator
+                                .padding(.top, 24)
+                        }
+                    }
+                    .cornerRadius(diameter/2)
+                    Spacer()
                 }
-                .cornerRadius(diameter/2)
+                .frame(height: baseRowHeight)
 
                 if hasEvents && eventIndicatorSize == .big {
                     eventIndicator
                         .padding(.top, bigIndicatorSpacing)
                 }
-
-                Spacer()
             }
-            .frame(width: geometry.size.width)
+            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
             .background(.clear)
             .opacity(
                 calendarType == .week

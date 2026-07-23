@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-07-22
+
+### Fixed
+- `.big` event indicator was scaled 3x; reduced to 1.5x, since the previous size was too large.
+- `DayView`'s day circle would shift vertical position depending on whether a `.big` indicator was shown below it on that particular day, misaligning day numbers within the same week row. The circle now sits in a fixed-height block independent of the indicator, so its position no longer depends on whether that day has an event.
+
 ## [1.3.0] - 2026-07-22
 
 ### Added
