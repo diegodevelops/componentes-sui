@@ -18,6 +18,7 @@ struct DayView: View {
     let textColor: Color
     var selectAction: ((_ date: Date) -> Void)?
     var eventIndicatorIcon: Image?
+    var eventIndicatorSize: EventIndicatorSize
 
     @State var hasEvents: Bool
     @State var isInCurrentDateMonth: Bool
@@ -32,6 +33,12 @@ struct DayView: View {
     // otherwise overflow the fixed row height and overlap adjacent weeks.
     private let maxDiameter: CGFloat = 44
 
+    // In .big mode the indicator no longer fits inside the circle, so it's
+    // placed below it instead; this is the gap between the two. WeekView
+    // reserves matching extra row height so it doesn't overlap the next week.
+    private let bigIndicatorSpacing: CGFloat = 4
+    private let indicatorScaleMultiplier: CGFloat = 3
+
     init(
         date: Date,
         monthDate: Date,
@@ -41,7 +48,8 @@ struct DayView: View {
         fontName: String = "Helvetica",
         textColor: Color,
         selectAction: ((_ date: Date) -> Void)?,
-        eventIndicatorIcon: Image? = nil
+        eventIndicatorIcon: Image? = nil,
+        eventIndicatorSize: EventIndicatorSize = .small
     ) {
         self.date = date
         self.monthDate = monthDate
@@ -52,6 +60,7 @@ struct DayView: View {
         self.textColor = textColor
         self.selectAction = selectAction
         self.eventIndicatorIcon = eventIndicatorIcon
+        self.eventIndicatorSize = eventIndicatorSize
 
         _hasEvents = State(
             initialValue: false
@@ -109,12 +118,18 @@ struct DayView: View {
                     )
                 }
                 .overlay() {
-                    if hasEvents {
+                    if hasEvents && eventIndicatorSize == .small {
                         eventIndicator
                             .padding(.top, 24)
                     }
                 }
                 .cornerRadius(diameter/2)
+
+                if hasEvents && eventIndicatorSize == .big {
+                    eventIndicator
+                        .padding(.top, bigIndicatorSpacing)
+                }
+
                 Spacer()
             }
             .frame(width: geometry.size.width)
@@ -137,15 +152,17 @@ struct DayView: View {
 
     @ViewBuilder
     private var eventIndicator: some View {
+        let scale: CGFloat = eventIndicatorSize == .big ? indicatorScaleMultiplier : 1
+
         if let eventIndicatorIcon {
             eventIndicatorIcon
                 .resizable()
                 .scaledToFit()
-                .frame(width: 8, height: 8)
+                .frame(width: 8 * scale, height: 8 * scale)
         } else {
             Circle()
                 .foregroundColor(Color.accentColor)
-                .frame(width: 4)
+                .frame(width: 4 * scale)
         }
     }
 }

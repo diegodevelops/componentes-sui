@@ -26,6 +26,7 @@ public struct WeeklyCalendarView: View {
     let fontName: String
     let textColor: Color
     var eventIndicatorIcon: Image?
+    var eventIndicatorSize: EventIndicatorSize
 
     @State private var scrollOffset = CGPoint()
     @State private var didScrollManually = true
@@ -55,7 +56,8 @@ public struct WeeklyCalendarView: View {
         isPreviewing: Bool = false,
         fontName: String,
         textColor: Color,
-        eventIndicatorIcon: Image? = nil
+        eventIndicatorIcon: Image? = nil,
+        eventIndicatorSize: EventIndicatorSize = .small
     ) {
         self.width = width
         self.events = events
@@ -66,6 +68,7 @@ public struct WeeklyCalendarView: View {
         self.fontName = fontName
         self.textColor = textColor
         self.eventIndicatorIcon = eventIndicatorIcon
+        self.eventIndicatorSize = eventIndicatorSize
         _didTap = State(initialValue: false)
 
         // MODIFIED: Initialize with a full year batch instead of 3 pages
@@ -86,7 +89,8 @@ public struct WeeklyCalendarView: View {
                 selectedDate: $selectedDate,
                 fontName: fontName,
                 textColor: textColor,
-                eventIndicatorIcon: eventIndicatorIcon
+                eventIndicatorIcon: eventIndicatorIcon,
+                eventIndicatorSize: eventIndicatorSize
             )
         }
         else {
@@ -117,7 +121,8 @@ public struct WeeklyCalendarView: View {
                                         didTap: $didTap,
                                         fontName: fontName,
                                         textColor: textColor,
-                                        eventIndicatorIcon: eventIndicatorIcon
+                                        eventIndicatorIcon: eventIndicatorIcon,
+                                        eventIndicatorSize: eventIndicatorSize
                                     )
                                 }
                                 .frame(width: width)
@@ -234,6 +239,7 @@ private struct WeeklyCalendarHeaderView: View {
     let fontName: String
     let textColor: Color
     var eventIndicatorIcon: Image?
+    var eventIndicatorSize: EventIndicatorSize
 
     // Landscape on iPhone reports a compact vertical size class; shrink
     // the header paddings then so the week row has more room to breathe.
@@ -257,7 +263,8 @@ private struct WeeklyCalendarHeaderView: View {
                 selectedDate: $selectedDate,
                 fontName: fontName,
                 textColor: textColor,
-                eventIndicatorIcon: eventIndicatorIcon
+                eventIndicatorIcon: eventIndicatorIcon,
+                eventIndicatorSize: eventIndicatorSize
             )
             .padding(.bottom, isCompactHeight ? 2 : 6)
             WeekTextView(
@@ -281,6 +288,7 @@ private struct WeeklyCalendarLoadingView: View {
     let fontName: String
     let textColor: Color
     var eventIndicatorIcon: Image?
+    var eventIndicatorSize: EventIndicatorSize
 
     @State private(set) var didTap: Bool
 
@@ -290,13 +298,15 @@ private struct WeeklyCalendarLoadingView: View {
         selectedDate: Binding<Date>,
         fontName: String,
         textColor: Color,
-        eventIndicatorIcon: Image? = nil
+        eventIndicatorIcon: Image? = nil,
+        eventIndicatorSize: EventIndicatorSize = .small
     ) {
         self.width = width
         self.events = events
         self.fontName = fontName
         self.textColor = textColor
         self.eventIndicatorIcon = eventIndicatorIcon
+        self.eventIndicatorSize = eventIndicatorSize
         _selectedDate = selectedDate
         _didTap = State(initialValue: false)
     }
@@ -314,7 +324,8 @@ private struct WeeklyCalendarLoadingView: View {
                 didTap: $didTap,
                 fontName: fontName,
                 textColor: textColor,
-                eventIndicatorIcon: eventIndicatorIcon
+                eventIndicatorIcon: eventIndicatorIcon,
+                eventIndicatorSize: eventIndicatorSize
             )
 
             Divider()

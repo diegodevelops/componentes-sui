@@ -22,9 +22,22 @@ struct WeekView: View {
     let textColor: Color
     var selectAction: ((_ date: Date) -> Void)?
     var eventIndicatorIcon: Image?
+    var eventIndicatorSize: EventIndicatorSize
 
     private(set) var week: Int // of month
     private var weekDates = [WeekDate]() // where count = 7
+
+    // Mirrors DayView's indicator sizing so the row reserves enough extra
+    // height for the enlarged, below-circle indicator in .big mode.
+    private let baseRowHeight: CGFloat = 50
+    private let bigIndicatorSpacing: CGFloat = 4
+    private let indicatorScaleMultiplier: CGFloat = 3
+
+    private var rowHeight: CGFloat {
+        guard eventIndicatorSize == .big else { return baseRowHeight }
+        let baseIndicatorSize: CGFloat = eventIndicatorIcon != nil ? 8 : 4
+        return baseRowHeight + bigIndicatorSpacing + baseIndicatorSize * indicatorScaleMultiplier
+    }
 
     init(
         date: Date,
@@ -35,7 +48,8 @@ struct WeekView: View {
         fontName: String,
         textColor: Color,
         selectAction: ((_ date: Date) -> Void)? = nil,
-        eventIndicatorIcon: Image? = nil
+        eventIndicatorIcon: Image? = nil,
+        eventIndicatorSize: EventIndicatorSize = .small
     ) {
 
         self.date = date
@@ -47,6 +61,7 @@ struct WeekView: View {
         self.textColor = textColor
         self.selectAction = selectAction
         self.eventIndicatorIcon = eventIndicatorIcon
+        self.eventIndicatorSize = eventIndicatorSize
 
         let cal = Calendar.current
         self.week = cal.component(.weekOfMonth, from: date)
@@ -74,14 +89,15 @@ struct WeekView: View {
                             fontName: fontName,
                             textColor: textColor,
                             selectAction: selectAction,
-                            eventIndicatorIcon: eventIndicatorIcon
+                            eventIndicatorIcon: eventIndicatorIcon,
+                            eventIndicatorSize: eventIndicatorSize
                         )
                     }
                     Spacer()
                 }
             }
             .background(.clear)
-            .frame(height: 50)
+            .frame(height: rowHeight)
         }
     }
 }
