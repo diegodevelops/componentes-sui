@@ -67,6 +67,7 @@ A horizontally pageable weekly calendar that displays one week at a time with in
 - `textColor`: The text color for the calendar
 - `eventIndicatorIcon`: Optional custom `Image` shown in place of the default dot to mark event dates
 - `eventIndicatorSize`: `.small` (default) keeps the indicator inside the day circle; `.big` scales it up and places it below the circle instead
+- `isDateHidden`: Set to `true` to hide the full date text below the week row (defaults to `false`, showing it)
 
 **Usage:**
 
@@ -82,7 +83,8 @@ GeometryReader { geometry in
         fontName: "Helvetica",
         textColor: .primary,
         eventIndicatorIcon: Image(systemName: "star.fill"),
-        eventIndicatorSize: .big
+        eventIndicatorSize: .big,
+        isDateHidden: false
     )
 }
 ```
