@@ -66,6 +66,7 @@ A horizontally pageable weekly calendar that displays one week at a time with in
 - `fontName`: The custom font name to use
 - `textColor`: The text color for the calendar
 - `eventIndicatorIcon`: Optional custom `Image` shown in place of the default dot to mark event dates
+- `eventIndicatorSize`: `.small` (default) keeps the indicator inside the day circle; `.big` scales it up and places it below the circle instead
 
 **Usage:**
 
@@ -80,7 +81,8 @@ GeometryReader { geometry in
         isLoading: false,
         fontName: "Helvetica",
         textColor: .primary,
-        eventIndicatorIcon: Image(systemName: "star.fill")
+        eventIndicatorIcon: Image(systemName: "star.fill"),
+        eventIndicatorSize: .big
     )
 }
 ```
@@ -101,6 +103,7 @@ A horizontally pageable monthly calendar that displays a full month grid with in
 - `fontName`: The custom font name to use (defaults to `"Helvetica"`)
 - `textColor`: The text color for the calendar
 - `eventIndicatorIcon`: Optional custom `Image` shown in place of the default dot to mark event dates
+- `eventIndicatorSize`: `.small` (default) keeps the indicator inside the day circle; `.big` scales it up and places it below the circle instead
 
 **Usage:**
 
@@ -117,7 +120,8 @@ MonthlyCalendarView(
     },
     fontName: "Helvetica",
     textColor: .primary,
-    eventIndicatorIcon: Image(systemName: "star.fill")
+    eventIndicatorIcon: Image(systemName: "star.fill"),
+    eventIndicatorSize: .big
 )
 ```
 

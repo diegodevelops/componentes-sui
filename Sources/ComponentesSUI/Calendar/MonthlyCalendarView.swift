@@ -16,6 +16,7 @@ public struct MonthlyCalendarView: View {
     var isLoading: Bool
     var selectAction: ((_ date: Date) -> Void)?
     var eventIndicatorIcon: Image?
+    var eventIndicatorSize: EventIndicatorSize
 
     // this flag was created because
     // for some reason the preview
@@ -45,7 +46,8 @@ public struct MonthlyCalendarView: View {
         isPreviewing: Bool = false,
         fontName: String = "Helvetica",
         textColor: Color,
-        eventIndicatorIcon: Image? = nil
+        eventIndicatorIcon: Image? = nil,
+        eventIndicatorSize: EventIndicatorSize = .small
     ) {
         self.width = width
         self.events = events
@@ -56,6 +58,7 @@ public struct MonthlyCalendarView: View {
         self.fontName = fontName
         self.textColor = textColor
         self.eventIndicatorIcon = eventIndicatorIcon
+        self.eventIndicatorSize = eventIndicatorSize
         _datePages = State(
             initialValue: helper.newMonthlyDatePagesFrom(
                 selectedDate.wrappedValue
@@ -103,7 +106,8 @@ public struct MonthlyCalendarView: View {
                                 fontName: fontName,
                                 textColor: textColor,
                                 selectAction: selectAction,
-                                eventIndicatorIcon: eventIndicatorIcon
+                                eventIndicatorIcon: eventIndicatorIcon,
+                                eventIndicatorSize: eventIndicatorSize
                             )
                             .opacity(isLoading ? opacity : 1)
                             .padding(.top, 20)
@@ -244,6 +248,7 @@ private struct MonthlyCalendarContentView: View {
     let textColor: Color
     var selectAction: ((_ date: Date) -> Void)?
     var eventIndicatorIcon: Image?
+    var eventIndicatorSize: EventIndicatorSize
 
     private(set) var weekRows: [MonthlyWeekRow]
 
@@ -255,7 +260,8 @@ private struct MonthlyCalendarContentView: View {
         fontName: String,
         textColor: Color,
         selectAction: ((_ date: Date) -> Void)?,
-        eventIndicatorIcon: Image? = nil
+        eventIndicatorIcon: Image? = nil,
+        eventIndicatorSize: EventIndicatorSize = .small
     ) {
         self.width = width
         self.date = date
@@ -265,6 +271,7 @@ private struct MonthlyCalendarContentView: View {
         self.textColor = textColor
         self.selectAction = selectAction
         self.eventIndicatorIcon = eventIndicatorIcon
+        self.eventIndicatorSize = eventIndicatorSize
 
         let weekDates = date.currentMonthOneDayOfEachWeek()
         
@@ -293,7 +300,8 @@ private struct MonthlyCalendarContentView: View {
                     fontName: fontName,
                     textColor: textColor,
                     selectAction: selectAction,
-                    eventIndicatorIcon: eventIndicatorIcon
+                    eventIndicatorIcon: eventIndicatorIcon,
+                    eventIndicatorSize: eventIndicatorSize
                 )
             }
             
