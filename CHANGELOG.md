@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-07-22
+
+### Fixed
+- `DayView`'s day-circle diameter was capped at 44pt instead of scaling unbounded with column width. On wide layouts (landscape, iPad) it previously grew past the fixed row height and visually overlapped adjacent weeks.
+
+### Changed
+- `WeeklyCalendarView` and `MonthlyCalendarView` header paddings now shrink when the vertical size class is compact (iPhone landscape), leaving more room for the week/month grid.
+
 ## [1.2.0] - 2026-07-22
 
 ### Added

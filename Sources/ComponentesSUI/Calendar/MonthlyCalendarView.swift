@@ -183,13 +183,19 @@ struct MonthlyCalendarHeaderView: View {
     var date: Date
     @Binding var selectedDate: Date
     var events: [Date]?
-    
+
     let fontName: String
     let textColor: Color
-    
+
+    // Landscape on iPhone reports a compact vertical size class, where
+    // the full-size header paddings would eat into the space needed
+    // for the month's week rows. Shrink them in that case.
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    private var isCompactHeight: Bool { verticalSizeClass == .compact }
+
     var body: some View {
         VStack(spacing: 2) {
-            
+
             // month year
             Text(
                 date.getTimeString(
@@ -201,8 +207,8 @@ struct MonthlyCalendarHeaderView: View {
                 size: 15)
             )
             .foregroundStyle(textColor)
-            .padding(.top, 16)
-            
+            .padding(.top, isCompactHeight ? 4 : 16)
+
             // weekday symbols
             WeekSymbolView(
                 date: date,
@@ -210,8 +216,8 @@ struct MonthlyCalendarHeaderView: View {
                 fontName: fontName,
                 textColor: textColor
             )
-            .padding(.top, 8)
-            .padding(.bottom, 16)
+            .padding(.top, isCompactHeight ? 2 : 8)
+            .padding(.bottom, isCompactHeight ? 4 : 16)
         }
         .frame(width: width)
     }

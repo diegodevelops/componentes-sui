@@ -27,6 +27,11 @@ struct DayView: View {
 
     private var hasSelectAction: Bool
 
+    // Caps the day circle's diameter so it doesn't scale unbounded with
+    // column width on wide layouts (landscape, iPad), where it would
+    // otherwise overflow the fixed row height and overlap adjacent weeks.
+    private let maxDiameter: CGFloat = 44
+
     init(
         date: Date,
         monthDate: Date,
@@ -66,16 +71,17 @@ struct DayView: View {
         GeometryReader {
             geometry in
 
-            
+            let diameter = min(geometry.size.width, maxDiameter)
+
             VStack(spacing: 0) {
-                
+
                 Spacer()
                 Button(action: {
-                    
+
                     selectedDate = date
                     selectAction?(date)
                 }, label: {
-                    
+
                     Text("\(day)")
                         .font(font)
                         .foregroundColor(
@@ -83,11 +89,11 @@ struct DayView: View {
                             ? (hasSelectAction ? textColor : Color.accentColor.contrastingTextColor)
                             : textColor
                         )
-                        
+
                 })
                 .frame(
-                    width: geometry.size.width,
-                    height: geometry.size.width
+                    width: diameter,
+                    height: diameter
                 )
                 .background() {
                     date.sameDayAs(date: selectedDate)
@@ -108,11 +114,11 @@ struct DayView: View {
                             .padding(.top, 24)
                     }
                 }
-                .cornerRadius(geometry.size.width/2)
+                .cornerRadius(diameter/2)
                 Spacer()
             }
+            .frame(width: geometry.size.width)
             .background(.clear)
-            .frame(height: geometry.size.width)
             .opacity(
                 calendarType == .week
                 ? 1

@@ -235,6 +235,11 @@ private struct WeeklyCalendarHeaderView: View {
     let textColor: Color
     var eventIndicatorIcon: Image?
 
+    // Landscape on iPhone reports a compact vertical size class; shrink
+    // the header paddings then so the week row has more room to breathe.
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    private var isCompactHeight: Bool { verticalSizeClass == .compact }
+
     var body: some View {
         VStack(spacing: 2) {
             WeekSymbolView(
@@ -243,7 +248,7 @@ private struct WeeklyCalendarHeaderView: View {
                 fontName: fontName,
                 textColor: textColor
             )
-            .padding(.top, 16)
+            .padding(.top, isCompactHeight ? 4 : 16)
             WeekView(
                 date: date,
                 monthDate: date,
@@ -254,13 +259,13 @@ private struct WeeklyCalendarHeaderView: View {
                 textColor: textColor,
                 eventIndicatorIcon: eventIndicatorIcon
             )
-            .padding(.bottom, 6)
+            .padding(.bottom, isCompactHeight ? 2 : 6)
             WeekTextView(
                 selectedDate: $selectedDate,
                 fontName: fontName,
                 textColor: textColor
             )
-            .padding(.bottom, 16)
+            .padding(.bottom, isCompactHeight ? 4 : 16)
         }
         .frame(width: width)
     }
