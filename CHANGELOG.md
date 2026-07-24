@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2026-07-23
+
+### Fixed
+- `DayView`'s event indicator (both `.small` and `.big`, though far more noticeable in `.big`) could fail to show for days scrolled to in `WeeklyCalendarView`. `hasEvents` was `@State` set from a `.task`, which isn't reliably triggered for pages other than the one visible on first appear across the 105 preloaded weeks. It's now a plain computed property evaluated directly in `body`, so it's always correct regardless of scroll/appear timing.
+
 ## [1.4.1] - 2026-07-23
 
 ### Fixed

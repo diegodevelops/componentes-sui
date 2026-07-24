@@ -20,7 +20,15 @@ struct DayView: View {
     var eventIndicatorIcon: Image?
     var eventIndicatorSize: EventIndicatorSize
 
-    @State var hasEvents: Bool
+    // Computed rather than @State set from a .task: WeeklyCalendarView
+    // preloads up to 105 weeks into one non-lazy HStack, and .task isn't
+    // reliably run for pages other than the one visible on first appear —
+    // so a stateful flag set there would silently stay false for days you
+    // scroll to. Computing it directly in body is always correct.
+    var hasEvents: Bool {
+        events?.hasDateInSameDayAs(date) ?? false
+    }
+
     @State var isInCurrentDateMonth: Bool
 
     private(set) var day: Int
@@ -67,10 +75,6 @@ struct DayView: View {
         self.selectAction = selectAction
         self.eventIndicatorIcon = eventIndicatorIcon
         self.eventIndicatorSize = eventIndicatorSize
-
-        _hasEvents = State(
-            initialValue: false
-        )
 
         _isInCurrentDateMonth = State(
             initialValue: monthDate
@@ -159,14 +163,6 @@ struct DayView: View {
                 ? 1
                 : (isInCurrentDateMonth ? 1 : 0)
             )
-            .task {
-
-                if let events = events {
-                    if events.hasDateInSameDayAs(date) {
-                        hasEvents = true
-                    }
-                }
-            }
         }
     }
 
