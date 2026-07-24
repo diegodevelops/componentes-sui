@@ -252,6 +252,18 @@ private struct WeeklyCalendarHeaderView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     private var isCompactHeight: Bool { verticalSizeClass == .compact }
 
+    // When the date text is hidden, the .big indicator becomes the last
+    // thing before the bottom Divider, so it gets its own explicit gap
+    // instead of the smaller spacing meant to lead into WeekTextView.
+    private let bigIndicatorDividerSpacing: CGFloat = 8
+
+    private var weekViewBottomPadding: CGFloat {
+        if eventIndicatorSize == .big && isDateHidden {
+            return bigIndicatorDividerSpacing
+        }
+        return isCompactHeight ? 2 : 6
+    }
+
     var body: some View {
         VStack(spacing: 2) {
             WeekSymbolView(
@@ -272,7 +284,7 @@ private struct WeeklyCalendarHeaderView: View {
                 eventIndicatorIcon: eventIndicatorIcon,
                 eventIndicatorSize: eventIndicatorSize
             )
-            .padding(.bottom, isCompactHeight ? 2 : 6)
+            .padding(.bottom, weekViewBottomPadding)
             if !isDateHidden {
                 WeekTextView(
                     selectedDate: $selectedDate,

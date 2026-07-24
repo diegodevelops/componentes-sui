@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-07-23
+
+### Fixed
+- `WeeklyCalendarView`: when `isDateHidden` is `true` and `eventIndicatorSize` is `.big`, the enlarged indicator becomes the last element before the bottom `Divider`. It now gets its own explicit 8pt gap instead of the smaller spacing meant to lead into `WeekTextView`.
+
 ## [1.4.0] - 2026-07-23
 
 ### Added
