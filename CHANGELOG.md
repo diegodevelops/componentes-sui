@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.3] - 2026-07-26
+
+### Changed
+- `WeeklyCalendarView`: the gap between `WeekSymbolView` and `WeekView` is now an explicit 8pt, independent of the header's other internal spacing. All other gaps (to `WeekTextView` or the bottom `Divider`) are unchanged.
+
 ## [1.4.2] - 2026-07-23
 
 ### Fixed
