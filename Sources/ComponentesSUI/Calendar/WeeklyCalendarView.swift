@@ -155,6 +155,15 @@ public struct WeeklyCalendarView: View {
                             isReloading = true
                             datePages = helper.newYearlyWeeklyDatePagesFrom(newValue)
                         }
+                        else {
+                            // ADDED: newValue is within the loaded range, but the visible
+                            // page might not be showing its week (e.g. selectedDate set
+                            // externally by the parent). Scroll to the matching page so
+                            // the view stays in sync — otherwise the next scroll-offset
+                            // update would silently revert selectedDate back to whatever
+                            // week is still on screen.
+                            scrollToPage(matching: newValue, proxy: proxy)
+                        }
                     }
                     .onChange(of: datePages) {
                         _, _ in
@@ -228,6 +237,32 @@ public struct WeeklyCalendarView: View {
                 datePages[centerIndex].id,
                 anchor: UnitPoint(x: 0, y: 0)
             )
+        }
+    }
+
+    // ADDED: Scrolls to whichever loaded page shows the same week as `date`,
+    // unless that page is already the one on screen. Used to resync the
+    // scroll position when selectedDate changes to a date within the
+    // loaded range but on a different week than the one currently visible.
+    private func scrollToPage(matching date: Date, proxy: ScrollViewProxy) {
+        guard let targetPage = datePages.first(where: { $0.date.sameWeekAs(date: date) }) else {
+            return
+        }
+
+        let currentPageIndex = width > 0 ? Int(round(scrollOffset.x / width)) : centerIndex
+        if datePages.indices.contains(currentPageIndex),
+           datePages[currentPageIndex].id == targetPage.id {
+            return
+        }
+
+        didScrollManually = true
+        if isPreviewing {
+            DispatchQueue.main.async {
+                proxy.scrollTo(targetPage.id, anchor: UnitPoint(x: 0, y: 0))
+            }
+        }
+        else {
+            proxy.scrollTo(targetPage.id, anchor: UnitPoint(x: 0, y: 0))
         }
     }
 }

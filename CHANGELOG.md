@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.4] - 2026-07-26
+
+### Fixed
+- `WeeklyCalendarView`: setting `selectedDate` externally to a date within the loaded ~2-year batch, but on a different week than the one currently visible, previously didn't scroll to it — the view silently stayed on the old week, and the next scroll-offset update would revert `selectedDate` back to it. It now scrolls to the matching page.
+- `Date.sameWeekAs(date:)` compared only the `weekOfYear` component, ignoring the year, so it aliased weeks ~52/53 apart from different years as "the same week." Since `WeeklyCalendarView` loads a batch spanning about two years, this could make it match the wrong page. Now uses `Calendar.isDate(_:equalTo:toGranularity:.weekOfYear)`, which accounts for the year.
+
 ## [1.4.3] - 2026-07-26
 
 ### Changed
