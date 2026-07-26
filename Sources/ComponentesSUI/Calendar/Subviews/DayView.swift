@@ -94,12 +94,18 @@ struct DayView: View {
 
             VStack(spacing: 0) {
 
-                // Fixed-height block: the day circle is always centered
-                // within the same baseRowHeight, so its position never
-                // shifts based on whether a .big indicator is appended
-                // below it for this particular day.
+                // Fixed-height block: the day circle's position is anchored
+                // the same way regardless of whether a .big indicator is
+                // appended below it for this particular day. In .big mode
+                // it's pinned to the block's bottom edge (see below); in
+                // .small mode it's pinned to the top, right under whatever
+                // precedes it, instead of being centered — centering left
+                // unpredictable slack above the circle whenever the column
+                // is narrower than maxDiameter.
                 VStack(spacing: 0) {
-                    Spacer()
+                    if eventIndicatorSize == .big {
+                        Spacer()
+                    }
                     Button(action: {
 
                         selectedDate = date
@@ -140,11 +146,11 @@ struct DayView: View {
                     }
                     .cornerRadius(diameter/2)
 
-                    // In .small mode the circle stays centered in its block
-                    // (trailing Spacer). In .big mode it's pinned to the
-                    // block's bottom edge instead, so bigIndicatorSpacing is
-                    // the exact gap to the indicator below — otherwise the
-                    // centering slack above would add to it unpredictably.
+                    // Only .small mode gets a trailing Spacer, so the circle
+                    // is pinned to the top of the block (see above). .big
+                    // mode has no trailing Spacer, so its leading one pushes
+                    // the circle to the bottom instead — keeping
+                    // bigIndicatorSpacing the exact gap to the indicator below.
                     if eventIndicatorSize == .small {
                         Spacer()
                     }
