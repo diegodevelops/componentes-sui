@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.8] - 2026-07-26
+
+### Fixed
+- `DaySymbolView` centered its weekday-letter `Text` inside a fixed `.frame(height: 26)` via `Spacer`s, leaving dead space below the text (well beyond the text's actual ~12-14pt height) before `WeekView` even started, independent of `weekSymbolToWeekViewSpacing`. It now sizes to its actual content instead.
+
+### Changed
+- `WeeklyCalendarView`: reduced the explicit gap between `WeekSymbolView` and `WeekView` from 2pt to 0.
+
 ## [1.4.7] - 2026-07-26
 
 ### Fixed

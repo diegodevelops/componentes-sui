@@ -38,17 +38,10 @@ struct DaySymbolView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-
-            Spacer()
-            Text(weekDaySymbol)
-                .font(font)
-                .foregroundColor(textColor)
-                .opacity(0.8)
-            Spacer()
-        }
-        .background(.clear)
-        .frame(height: 26)
+        Text(weekDaySymbol)
+            .font(font)
+            .foregroundColor(textColor)
+            .opacity(0.8)
     }
 }
 
