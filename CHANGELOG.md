@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.7] - 2026-07-26
+
+### Fixed
+- `DayView`'s day circle (in `.small` mode) was vertically centered within its fixed 50pt row, leaving unpredictable slack above it — worse the narrower the per-day column was relative to the 44pt circle cap — that no amount of external padding could remove. It's now top-aligned within the row instead, so explicit spacing above it (e.g. `WeeklyCalendarView`'s gap between `WeekSymbolView` and `WeekView`) is the full, exact visible gap. `.big` mode (bottom-pinned) is unaffected. Since `DayView`/`WeekView` are shared, this also affects day-circle positioning within `MonthlyCalendarView`'s week rows (now top-anchored per row instead of centered).
+
 ## [1.4.6] - 2026-07-26
 
 ### Changed
