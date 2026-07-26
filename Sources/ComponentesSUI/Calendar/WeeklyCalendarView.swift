@@ -257,15 +257,23 @@ private struct WeeklyCalendarHeaderView: View {
     // instead of the smaller spacing meant to lead into WeekTextView.
     private let bigIndicatorDividerSpacing: CGFloat = 8
 
+    // Explicit gap between WeekSymbolView and WeekView, independent of
+    // the VStack's own spacing (which now only separates WeekView from
+    // whatever follows it).
+    private let weekSymbolToWeekViewSpacing: CGFloat = 8
+
     private var weekViewBottomPadding: CGFloat {
         if eventIndicatorSize == .big && isDateHidden {
             return bigIndicatorDividerSpacing
         }
-        return isCompactHeight ? 2 : 6
+        let base: CGFloat = isCompactHeight ? 2 : 6
+        // Restores the gap the VStack's own spacing used to provide here
+        // before it was zeroed out, only when WeekTextView follows.
+        return isDateHidden ? base : base + 2
     }
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: 0) {
             WeekSymbolView(
                 date: date,
                 selectedDate: $selectedDate,
@@ -273,6 +281,7 @@ private struct WeeklyCalendarHeaderView: View {
                 textColor: textColor
             )
             .padding(.top, isCompactHeight ? 4 : 16)
+            .padding(.bottom, weekSymbolToWeekViewSpacing)
             WeekView(
                 date: date,
                 monthDate: date,
