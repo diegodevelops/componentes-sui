@@ -77,10 +77,16 @@ extension Date {
     }
     
     func sameWeekAs(date: Date) -> Bool {
-        let cal = Calendar.current
-        let w = cal.component(.weekOfYear, from: self)
-        let w2 = cal.component(.weekOfYear, from: date)
-        return w == w2
+        // Comparing the raw .weekOfYear component ignores the year, so it
+        // aliases weeks ~52/53 apart from different years as "the same
+        // week". WeeklyCalendarView's loaded batch spans ~2 years, so that
+        // caused it to match the wrong page. isDate(_:equalTo:toGranularity:)
+        // compares full calendar weeks, year included.
+        return Calendar.current.isDate(
+            self,
+            equalTo: date,
+            toGranularity: .weekOfYear
+        )
     }
     
     func yearsFromToday() -> Int {
