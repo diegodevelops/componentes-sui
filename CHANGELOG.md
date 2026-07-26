@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.5] - 2026-07-26
+
+### Fixed
+- `DaySymbolView` (the weekday-letter row used by both `WeeklyCalendarView` and `MonthlyCalendarView`) applied 16pt top/bottom padding around its `Text` while constrained to a fixed 26pt frame, causing the content to overflow well beyond its declared bounds since `VStack` doesn't clip. Removed the redundant padding — the text now centers cleanly within the 26pt row via the existing `Spacer`s.
+
+### Changed
+- `WeeklyCalendarView`: reduced the explicit gap between `WeekSymbolView` and `WeekView` from 8pt to 4pt.
+
 ## [1.4.4] - 2026-07-26
 
 ### Fixed
