@@ -7,20 +7,8 @@
 
 import SwiftUI
 
-private struct WeeklyCalendarWidthPreferenceKey: PreferenceKey {
-    static let defaultValue: CGFloat = 0
-
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
-
 public struct WeeklyCalendarView: View {
 
-    // Measured from the parent via a background GeometryReader (see body)
-    // instead of being passed in, so callers don't need to supply their
-    // own GeometryReader just to size this view.
-    @State private var width: CGFloat = 0
     var events: [Date]?
 
     @Binding var selectedDate: Date
@@ -92,39 +80,27 @@ public struct WeeklyCalendarView: View {
     }
 
     public var body: some View {
-        content
-            .frame(maxWidth: .infinity)
-            .background(
-                GeometryReader {
-                    geometry in
+        // A plain GeometryReader wrapping the whole view — its measured
+        // size depends only on what this view's own parent proposes, never
+        // on anything rendered inside, so there's no feedback loop. (An
+        // earlier attempt measured this view's own rendered width via a
+        // background GeometryReader + state, but content used that same
+        // state for internal .frame(width:) sizing, which fed back into
+        // the measurement and oscillated indefinitely between 0 and the
+        // real width — this is the same requirement the pre-2.0 API had
+        // callers satisfy themselves by wrapping us in their own
+        // GeometryReader; it's just internalized now.)
+        GeometryReader {
+            geometry in
 
-                    Color.clear.preference(
-                        key: WeeklyCalendarWidthPreferenceKey.self,
-                        value: geometry.size.width
-                    )
-                }
-            )
-            .onPreferenceChange(WeeklyCalendarWidthPreferenceKey.self) {
-                newWidth in
-
-                width = newWidth
-            }
+            content(width: geometry.size.width)
+        }
     }
 
     @ViewBuilder
-    private var content: some View {
+    private func content(width: CGFloat) -> some View {
 
-        if width <= 0 {
-
-            // Nothing to lay out yet — avoids rendering the scrollable
-            // content (and its 105 preloaded pages) at a zero width for
-            // one frame while the size above resolves. EmptyView won't do
-            // here: unlike Color, its ideal width is zero, so
-            // .frame(maxWidth: .infinity) has nothing to expand and the
-            // background GeometryReader below would measure zero forever.
-            Color.clear.frame(height: 0)
-        }
-        else if isLoading {
+        if isLoading {
 
             WeeklyCalendarLoadingView(
                 width: width,
@@ -202,7 +178,7 @@ public struct WeeklyCalendarView: View {
                             // the view stays in sync — otherwise the next scroll-offset
                             // update would silently revert selectedDate back to whatever
                             // week is still on screen.
-                            scrollToPage(matching: newValue, proxy: proxy)
+                            scrollToPage(matching: newValue, width: width, proxy: proxy)
                         }
                     }
                     .onChange(of: datePages) {
@@ -284,7 +260,7 @@ public struct WeeklyCalendarView: View {
     // unless that page is already the one on screen. Used to resync the
     // scroll position when selectedDate changes to a date within the
     // loaded range but on a different week than the one currently visible.
-    private func scrollToPage(matching date: Date, proxy: ScrollViewProxy) {
+    private func scrollToPage(matching date: Date, width: CGFloat, proxy: ScrollViewProxy) {
         guard let targetPage = datePages.first(where: { $0.date.sameWeekAs(date: date) }) else {
             return
         }

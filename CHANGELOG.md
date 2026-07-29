@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2026-07-29
+
+### Fixed
+- `WeeklyCalendarView` still rendered nothing (the 2.0.1 fix wasn't enough): the width was measured via a `.background(GeometryReader{...})` + `@State`, but the real calendar content used that same state for internal `.frame(width:)` sizing needed for horizontal paging — the measurement depended on content's size, and content's size depended on the measurement, so it oscillated between `0` and the real width forever and never rendered past its placeholder. Removed the `@State`/`PreferenceKey` measuring apparatus entirely; `body` now wraps everything in a plain `GeometryReader` and passes its `geometry.size.width` straight through as a local value, never stored or fed back into anything.
+
+### Changed
+- As a result, `WeeklyCalendarView` now expands to fill all available height as well as width (since `GeometryReader` is greedy in both dimensions) — matching what the pre-2.0.0 API required of callers wrapping it in their own `GeometryReader`. Give it a bounded `.frame(height:)` if you don't want it to fill all available vertical space.
+
 ## [2.0.1] - 2026-07-26
 
 ### Fixed
