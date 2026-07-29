@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-07-26
+
+### Changed
+- **Breaking:** `WeeklyCalendarView` no longer takes a `width: CGFloat` parameter. It now measures its own width from its parent via an internal `GeometryReader`, so it can be dropped into a layout directly without the caller needing to wrap it in one. Update call sites by removing the `width:` argument (and the wrapping `GeometryReader`, if it was only there for this).
+
 ## [1.4.8] - 2026-07-26
 
 ### Fixed

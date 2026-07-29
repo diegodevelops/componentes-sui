@@ -7,9 +7,20 @@
 
 import SwiftUI
 
+private struct WeeklyCalendarWidthPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
 public struct WeeklyCalendarView: View {
 
-    var width: CGFloat
+    // Measured from the parent via a background GeometryReader (see body)
+    // instead of being passed in, so callers don't need to supply their
+    // own GeometryReader just to size this view.
+    @State private var width: CGFloat = 0
     var events: [Date]?
 
     @Binding var selectedDate: Date
@@ -50,7 +61,6 @@ public struct WeeklyCalendarView: View {
     private let edgeThreshold = 4
 
     public init(
-        width: CGFloat,
         events: [Date]?,
         selectedDate: Binding<Date>,
         isLoading: Bool,
@@ -61,7 +71,6 @@ public struct WeeklyCalendarView: View {
         eventIndicatorSize: EventIndicatorSize = .small,
         isDateHidden: Bool = false
     ) {
-        self.width = width
         self.events = events
 
         _selectedDate = selectedDate
@@ -83,8 +92,36 @@ public struct WeeklyCalendarView: View {
     }
 
     public var body: some View {
+        content
+            .frame(maxWidth: .infinity)
+            .background(
+                GeometryReader {
+                    geometry in
 
-        if isLoading {
+                    Color.clear.preference(
+                        key: WeeklyCalendarWidthPreferenceKey.self,
+                        value: geometry.size.width
+                    )
+                }
+            )
+            .onPreferenceChange(WeeklyCalendarWidthPreferenceKey.self) {
+                newWidth in
+
+                width = newWidth
+            }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+
+        if width <= 0 {
+
+            // Nothing to lay out yet — avoids rendering the scrollable
+            // content (and its 105 preloaded pages) at a zero width for
+            // one frame while the size above resolves.
+            EmptyView()
+        }
+        else if isLoading {
 
             WeeklyCalendarLoadingView(
                 width: width,
@@ -404,22 +441,17 @@ private struct WeeklyCalendarLoadingView: View {
 struct WeeklyCalendarView_Previews: PreviewProvider {
     static var previews: some View {
 
-        GeometryReader {
-            geometry in
+        WithBinding(data: Date()) {
+            selectedDate in
 
-            WithBinding(data: Date()) {
-                selectedDate in
-
-                WeeklyCalendarView(
-                    width: geometry.size.width,
-                    events: [ Date() ],
-                    selectedDate: selectedDate,
-                    isLoading: false,
-                    isPreviewing: true,
-                    fontName: "Menlo",
-                    textColor: .primary
-                )
-            }
+            WeeklyCalendarView(
+                events: [ Date() ],
+                selectedDate: selectedDate,
+                isLoading: false,
+                isPreviewing: true,
+                fontName: "Menlo",
+                textColor: .primary
+            )
         }
     }
 }

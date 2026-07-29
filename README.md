@@ -55,10 +55,9 @@ OffsetObservingScrollView(
 
 ### WeeklyCalendarView
 
-A horizontally pageable weekly calendar that displays one week at a time with infinite scrolling. It highlights the selected date, marks event dates, and automatically loads more weeks as the user scrolls near the edges.
+A horizontally pageable weekly calendar that displays one week at a time with infinite scrolling. It highlights the selected date, marks event dates, and automatically loads more weeks as the user scrolls near the edges. It sizes itself to fill its parent's available width — no `GeometryReader` needed.
 
 **Parameters:**
-- `width`: The width of the calendar view (typically from `GeometryReader`)
 - `events`: Optional array of `Date` values to mark on the calendar
 - `selectedDate`: Binding to the currently selected date
 - `isLoading`: Shows a loading state when `true`
@@ -74,19 +73,16 @@ A horizontally pageable weekly calendar that displays one week at a time with in
 ```swift
 @State private var selectedDate = Date()
 
-GeometryReader { geometry in
-    WeeklyCalendarView(
-        width: geometry.size.width,
-        events: [Date()],
-        selectedDate: $selectedDate,
-        isLoading: false,
-        fontName: "Helvetica",
-        textColor: .primary,
-        eventIndicatorIcon: Image(systemName: "star.fill"),
-        eventIndicatorSize: .big,
-        isDateHidden: false
-    )
-}
+WeeklyCalendarView(
+    events: [Date()],
+    selectedDate: $selectedDate,
+    isLoading: false,
+    fontName: "Helvetica",
+    textColor: .primary,
+    eventIndicatorIcon: Image(systemName: "star.fill"),
+    eventIndicatorSize: .big,
+    isDateHidden: false
+)
 ```
 
 ---
