@@ -118,8 +118,11 @@ public struct WeeklyCalendarView: View {
 
             // Nothing to lay out yet — avoids rendering the scrollable
             // content (and its 105 preloaded pages) at a zero width for
-            // one frame while the size above resolves.
-            EmptyView()
+            // one frame while the size above resolves. EmptyView won't do
+            // here: unlike Color, its ideal width is zero, so
+            // .frame(maxWidth: .infinity) has nothing to expand and the
+            // background GeometryReader below would measure zero forever.
+            Color.clear.frame(height: 0)
         }
         else if isLoading {
 
