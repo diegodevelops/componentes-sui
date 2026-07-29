@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-07-26
+
+### Fixed
+- `WeeklyCalendarView` rendered nothing at all — the auto-width measurement introduced in 2.0.0 used `EmptyView()` as a placeholder while width was unresolved, but `EmptyView` has a zero ideal size, so `.frame(maxWidth: .infinity)` had nothing to expand and the background `GeometryReader` measured a width of zero forever, permanently stuck on the placeholder. Now uses `Color.clear.frame(height: 0)`, which reliably expands to fill the proposed width (while staying pinned to zero height) so the real width is measured correctly.
+
 ## [2.0.0] - 2026-07-26
 
 ### Changed
