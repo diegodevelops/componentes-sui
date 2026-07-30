@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2026-07-29
+
+### Fixed
+- `WeeklyCalendarView` could render completely invisible when placed inside a vertically-scrolling `ScrollView`. The `GeometryReader` used internally since 2.0.2 to measure width adopts whatever height its parent proposes — and a `ScrollView` proposes an effectively unbounded height, which `GeometryReader` resolves to near-zero. Combined with 2.0.3's `.clipped()`, the view was clipped away to nothing. Replaced the `GeometryReader` wrap with `.onGeometryChange` (iOS 17+), which observes the resolved size without forcing greedy sizing, so the view now sizes to its natural content instead of collapsing.
+- Re-introduced the 2.0.3 clipping fix on a sounder footing: the view now also re-asserts its own measured height via an explicit `.frame(height:)`. Without this, a caller's own smaller `.frame(height:).clipped()` didn't reliably clip — content containing a nested `ScrollView` (used internally for week paging) escapes an externally-imposed frame constraint unless the view first reports a plain, explicit height itself. Verified with an isolated SwiftUI test independent of this package.
+
 ## [2.0.3] - 2026-07-29
 
 ### Fixed

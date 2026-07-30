@@ -55,7 +55,7 @@ OffsetObservingScrollView(
 
 ### WeeklyCalendarView
 
-A horizontally pageable weekly calendar that displays one week at a time with infinite scrolling. It highlights the selected date, marks event dates, and automatically loads more weeks as the user scrolls near the edges. It fills whatever space its parent gives it — no need to pass a `width` or wrap it in your own `GeometryReader`. Since it expands in both width and height, give it a bounded frame (e.g. `.frame(height:)`) if you don't want it to fill all available vertical space.
+A horizontally pageable weekly calendar that displays one week at a time with infinite scrolling. It highlights the selected date, marks event dates, and automatically loads more weeks as the user scrolls near the edges. It measures its own width from its parent — no need to pass a `width` or wrap it in your own `GeometryReader` — and sizes itself to its natural content height, so it works correctly both in a plain layout and inside a `ScrollView`. If you constrain it to less height than its content needs (e.g. `.frame(height:)`), add `.clipped()` so the excess is cut off cleanly instead of overlapping whatever comes after it.
 
 **Parameters:**
 - `events`: Optional array of `Date` values to mark on the calendar
