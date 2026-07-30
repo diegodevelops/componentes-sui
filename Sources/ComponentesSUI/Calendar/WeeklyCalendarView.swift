@@ -95,6 +95,11 @@ public struct WeeklyCalendarView: View {
 
             content(width: geometry.size.width)
         }
+        // GeometryReader doesn't clip: if a caller gives this view less
+        // height than its content needs, the excess would otherwise spill
+        // out past the bottom edge and visually overlap whatever comes
+        // after it in the caller's own layout.
+        .clipped()
     }
 
     @ViewBuilder
