@@ -9,6 +9,20 @@ import SwiftUI
 
 public struct WeeklyCalendarView: View {
 
+    // Observed from this view's own resolved size via .onGeometryChange
+    // (see body), instead of being passed in — so callers don't need to
+    // supply a width or wrap this view in their own GeometryReader.
+    @State private var width: CGFloat = 0
+
+    // Re-asserted via an explicit .frame(height:) in body. Without this,
+    // a caller's own smaller .frame(height:).clipped() around this view
+    // doesn't reliably clip: the internal horizontal ScrollView escapes an
+    // externally-imposed constraint unless this view first reports a
+    // plain, explicit height itself (verified empirically — a bare
+    // ScrollView-containing view behaves the same way even outside this
+    // package).
+    @State private var contentHeight: CGFloat = 0
+
     var events: [Date]?
 
     @Binding var selectedDate: Date
@@ -80,26 +94,31 @@ public struct WeeklyCalendarView: View {
     }
 
     public var body: some View {
-        // A plain GeometryReader wrapping the whole view — its measured
-        // size depends only on what this view's own parent proposes, never
-        // on anything rendered inside, so there's no feedback loop. (An
-        // earlier attempt measured this view's own rendered width via a
-        // background GeometryReader + state, but content used that same
-        // state for internal .frame(width:) sizing, which fed back into
-        // the measurement and oscillated indefinitely between 0 and the
-        // real width — this is the same requirement the pre-2.0 API had
-        // callers satisfy themselves by wrapping us in their own
-        // GeometryReader; it's just internalized now.)
-        GeometryReader {
-            geometry in
+        // .onGeometryChange (iOS 17+) observes this view's resolved size
+        // without altering its layout behavior — unlike wrapping the body
+        // in a GeometryReader, which forces it to greedily fill all
+        // available height too and breaks inside vertically-scrolling
+        // parents (which propose an effectively unbounded height, and a
+        // GeometryReader given that resolves to close to zero).
+        content(width: width)
+            .onGeometryChange(for: CGSize.self) {
+                geometry in
 
-            content(width: geometry.size.width)
-        }
-        // GeometryReader doesn't clip: if a caller gives this view less
-        // height than its content needs, the excess would otherwise spill
-        // out past the bottom edge and visually overlap whatever comes
-        // after it in the caller's own layout.
-        .clipped()
+                geometry.size
+            } action: {
+                newSize in
+
+                width = newSize.width
+                contentHeight = newSize.height
+            }
+            // Re-assert the measured height explicitly. Without this, a
+            // caller's own smaller .frame(height:).clipped() around this
+            // view wouldn't reliably clip the internal horizontal
+            // ScrollView (confirmed independently of this package: a bare
+            // view containing a ScrollView escapes an externally-imposed
+            // frame + clipped the same way). An explicit numeric height
+            // behaves like any ordinary view's, so external clipping works.
+            .frame(height: contentHeight > 0 ? contentHeight : nil)
     }
 
     @ViewBuilder
