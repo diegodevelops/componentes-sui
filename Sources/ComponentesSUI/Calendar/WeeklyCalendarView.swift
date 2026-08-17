@@ -155,7 +155,17 @@ public struct WeeklyCalendarView: View {
                         offset: $scrollOffset
                     ) {
 
-                        HStack(spacing: 0) {
+                        // LazyHStack: datePages holds a full year batch (105
+                        // weeks) for infinite-scroll room. A plain HStack
+                        // would force SwiftUI to build and lay out all 735
+                        // DayViews (105 weeks x 7 days) synchronously the
+                        // moment this view appears, instead of just the
+                        // page(s) actually on screen — the main-thread jank
+                        // reported at first appearance. ScrollViewReader's
+                        // scrollTo (used below to center on page load) works
+                        // the same with a lazy stack, including scrolling to
+                        // pages that haven't been built yet.
+                        LazyHStack(spacing: 0) {
                             ForEach(datePages) {
                                 datePage in
 
