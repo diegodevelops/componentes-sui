@@ -67,6 +67,7 @@ A horizontally pageable weekly calendar that displays one week at a time with in
 - `eventIndicatorIcon`: Optional custom `Image` shown in place of the default dot to mark event dates
 - `eventIndicatorSize`: `.small` (default) keeps the indicator inside the day circle; `.big` scales it up and places it below the circle instead
 - `isDateHidden`: Set to `true` to hide the full date text below the week row (defaults to `false`, showing it)
+- `todayColor`: Optional `Color` for the background of today's date circle (defaults to `nil`, falling back to `Color.accentColor`). Only affects today's circle — the selected-date circle and event indicator stay `accentColor`.
 
 **Usage:**
 
@@ -81,7 +82,8 @@ WeeklyCalendarView(
     textColor: .primary,
     eventIndicatorIcon: Image(systemName: "star.fill"),
     eventIndicatorSize: .big,
-    isDateHidden: false
+    isDateHidden: false,
+    todayColor: .orange
 )
 ```
 

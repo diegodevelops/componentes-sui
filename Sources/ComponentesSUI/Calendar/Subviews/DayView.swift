@@ -20,6 +20,12 @@ struct DayView: View {
     var eventIndicatorIcon: Image?
     var eventIndicatorSize: EventIndicatorSize
 
+    // Background of the circle marking today's date, when it isn't also
+    // filling in for the selected-date circle. Falls back to the system
+    // accent color when nil.
+    var todayColor: Color?
+    private var effectiveTodayColor: Color { todayColor ?? .accentColor }
+
     // Computed rather than @State set from a .task: WeeklyCalendarView
     // preloads up to 105 weeks into one non-lazy HStack, and .task isn't
     // reliably run for pages other than the one visible on first appear —
@@ -63,7 +69,8 @@ struct DayView: View {
         textColor: Color,
         selectAction: ((_ date: Date) -> Void)?,
         eventIndicatorIcon: Image? = nil,
-        eventIndicatorSize: EventIndicatorSize = .small
+        eventIndicatorSize: EventIndicatorSize = .small,
+        todayColor: Color? = nil
     ) {
         self.date = date
         self.monthDate = monthDate
@@ -75,6 +82,7 @@ struct DayView: View {
         self.selectAction = selectAction
         self.eventIndicatorIcon = eventIndicatorIcon
         self.eventIndicatorSize = eventIndicatorSize
+        self.todayColor = todayColor
 
         _isInCurrentDateMonth = State(
             initialValue: monthDate
@@ -127,12 +135,11 @@ struct DayView: View {
                     )
                     .background() {
                         date.sameDayAs(date: selectedDate)
-                        ? Color.accentColor.opacity(
-                            hasSelectAction
-                            ? (date.sameDayAs(date: today) ? 0.3 : 0)
-                            : 1
+                        ? (hasSelectAction
+                           ? effectiveTodayColor.opacity(date.sameDayAs(date: today) ? 0.3 : 0)
+                           : Color.accentColor.opacity(1)
                           )
-                        : Color.accentColor.opacity(
+                        : effectiveTodayColor.opacity(
                             date.sameDayAs(date: today)
                             ? 0.3
                             : 0

@@ -23,6 +23,7 @@ struct WeekView: View {
     var selectAction: ((_ date: Date) -> Void)?
     var eventIndicatorIcon: Image?
     var eventIndicatorSize: EventIndicatorSize
+    var todayColor: Color?
 
     private(set) var week: Int // of month
     private var weekDates = [WeekDate]() // where count = 7
@@ -49,7 +50,8 @@ struct WeekView: View {
         textColor: Color,
         selectAction: ((_ date: Date) -> Void)? = nil,
         eventIndicatorIcon: Image? = nil,
-        eventIndicatorSize: EventIndicatorSize = .small
+        eventIndicatorSize: EventIndicatorSize = .small,
+        todayColor: Color? = nil
     ) {
 
         self.date = date
@@ -62,6 +64,7 @@ struct WeekView: View {
         self.selectAction = selectAction
         self.eventIndicatorIcon = eventIndicatorIcon
         self.eventIndicatorSize = eventIndicatorSize
+        self.todayColor = todayColor
 
         let cal = Calendar.current
         self.week = cal.component(.weekOfMonth, from: date)
@@ -90,7 +93,8 @@ struct WeekView: View {
                             textColor: textColor,
                             selectAction: selectAction,
                             eventIndicatorIcon: eventIndicatorIcon,
-                            eventIndicatorSize: eventIndicatorSize
+                            eventIndicatorSize: eventIndicatorSize,
+                            todayColor: todayColor
                         )
                     }
                     Spacer()
