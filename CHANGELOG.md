@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2026-08-17
+
+### Fixed
+- `WeeklyCalendarView` caused a noticeable main-thread stall right when it first appeared. `datePages` preloads a year-long batch (105 weeks) for infinite scroll room, but they were rendered in a plain `HStack` inside a `ScrollView`, which forces SwiftUI to build and lay out all 735 `DayView`s (105 weeks x 7 days) synchronously up front instead of just the page(s) on screen. Changed to `LazyHStack`. Measured via an instrumented build in a Simulator test harness: `DayView.body` evaluations at startup dropped from 1470 to 14 (~105x). `ScrollViewReader`'s `scrollTo`, used to center the view and to jump to a page when `selectedDate` changes externally, continues to work correctly with the lazy stack, including scrolling to pages that haven't been built yet — verified with both the initial center-on-appear and a jump to a page 6 weeks away.
+
 ## [2.1.0] - 2026-08-16
 
 ### Added
