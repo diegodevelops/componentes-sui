@@ -41,6 +41,7 @@ public struct WeeklyCalendarView: View {
     var eventIndicatorIcon: Image?
     var eventIndicatorSize: EventIndicatorSize
     var isDateHidden: Bool
+    var todayColor: Color?
 
     @State private var scrollOffset = CGPoint()
     @State private var didScrollManually = true
@@ -71,7 +72,8 @@ public struct WeeklyCalendarView: View {
         textColor: Color,
         eventIndicatorIcon: Image? = nil,
         eventIndicatorSize: EventIndicatorSize = .small,
-        isDateHidden: Bool = false
+        isDateHidden: Bool = false,
+        todayColor: Color? = nil
     ) {
         self.events = events
 
@@ -83,6 +85,7 @@ public struct WeeklyCalendarView: View {
         self.eventIndicatorIcon = eventIndicatorIcon
         self.eventIndicatorSize = eventIndicatorSize
         self.isDateHidden = isDateHidden
+        self.todayColor = todayColor
         _didTap = State(initialValue: false)
 
         // MODIFIED: Initialize with a full year batch instead of 3 pages
@@ -134,7 +137,8 @@ public struct WeeklyCalendarView: View {
                 textColor: textColor,
                 eventIndicatorIcon: eventIndicatorIcon,
                 eventIndicatorSize: eventIndicatorSize,
-                isDateHidden: isDateHidden
+                isDateHidden: isDateHidden,
+                todayColor: todayColor
             )
         }
         else {
@@ -167,7 +171,8 @@ public struct WeeklyCalendarView: View {
                                         textColor: textColor,
                                         eventIndicatorIcon: eventIndicatorIcon,
                                         eventIndicatorSize: eventIndicatorSize,
-                                        isDateHidden: isDateHidden
+                                        isDateHidden: isDateHidden,
+                                        todayColor: todayColor
                                     )
                                 }
                                 .frame(width: width)
@@ -321,6 +326,7 @@ private struct WeeklyCalendarHeaderView: View {
     var eventIndicatorIcon: Image?
     var eventIndicatorSize: EventIndicatorSize
     var isDateHidden: Bool
+    var todayColor: Color?
 
     // Landscape on iPhone reports a compact vertical size class; shrink
     // the header paddings then so the week row has more room to breathe.
@@ -366,7 +372,8 @@ private struct WeeklyCalendarHeaderView: View {
                 fontName: fontName,
                 textColor: textColor,
                 eventIndicatorIcon: eventIndicatorIcon,
-                eventIndicatorSize: eventIndicatorSize
+                eventIndicatorSize: eventIndicatorSize,
+                todayColor: todayColor
             )
             .padding(.bottom, weekViewBottomPadding)
             if !isDateHidden {
@@ -394,6 +401,7 @@ private struct WeeklyCalendarLoadingView: View {
     var eventIndicatorIcon: Image?
     var eventIndicatorSize: EventIndicatorSize
     var isDateHidden: Bool
+    var todayColor: Color?
 
     @State private(set) var didTap: Bool
 
@@ -405,7 +413,8 @@ private struct WeeklyCalendarLoadingView: View {
         textColor: Color,
         eventIndicatorIcon: Image? = nil,
         eventIndicatorSize: EventIndicatorSize = .small,
-        isDateHidden: Bool = false
+        isDateHidden: Bool = false,
+        todayColor: Color? = nil
     ) {
         self.width = width
         self.events = events
@@ -414,6 +423,7 @@ private struct WeeklyCalendarLoadingView: View {
         self.eventIndicatorIcon = eventIndicatorIcon
         self.eventIndicatorSize = eventIndicatorSize
         self.isDateHidden = isDateHidden
+        self.todayColor = todayColor
         _selectedDate = selectedDate
         _didTap = State(initialValue: false)
     }
@@ -433,7 +443,8 @@ private struct WeeklyCalendarLoadingView: View {
                 textColor: textColor,
                 eventIndicatorIcon: eventIndicatorIcon,
                 eventIndicatorSize: eventIndicatorSize,
-                isDateHidden: isDateHidden
+                isDateHidden: isDateHidden,
+                todayColor: todayColor
             )
 
             Divider()
